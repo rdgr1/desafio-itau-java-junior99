@@ -16,5 +16,4 @@ public class TransacaoModel {
     private UUID uuid;
     private BigDecimal valor;
     private LocalDateTime dataHora;
-
 }
