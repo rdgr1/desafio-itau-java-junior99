@@ -1,6 +1,7 @@
 package org.rod.itau.challenge.bank99.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.rod.itau.challenge.bank99.dto.EstatiscaDto;
 import org.rod.itau.challenge.bank99.dto.TransacaoDto;
 import org.rod.itau.challenge.bank99.mapper.TransacaoMapper;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Service
 public class TransacaoService {
     // Dependências
@@ -33,22 +35,24 @@ public class TransacaoService {
             throw new IllegalArgumentException("O valor não pode ser negativo!");
         }
         // Data Antes ou Depois
-        if (transacao.getDataHora().isAfter(LocalDateTime.now()) || transacao.getDataHora().isBefore(LocalDateTime.now())){
+        if (transacao.getDataHora().isAfter(LocalDateTime.now())){
             throw new IllegalArgumentException("A data deve estar no presente");
         }
         var saved = repo.save(transacao);
+        log.info("Transação Salva com Sucesso!");
         return mapper.toDto(saved);
     }
     // Limpar Todas
     public void deleteAll(){
-        var all = repo.findAll();
-        repo.deleteAll(all);
+        repo.deleteAll();
+        log.info("Todas Transações Deletadas!");
     }
     // Buscar Todas
     public List<TransacaoDto> findAll(){
         var all = repo.findAll();
         List<TransacaoDto> dtos = new ArrayList<>();
         all.forEach(transacao -> { dtos.add(mapper.toDto(transacao)); });
+        log.info("Todas Transacoes:");
         return dtos;
     }
     // Insights das Ultimas Transações
@@ -74,6 +78,7 @@ public class TransacaoService {
         var min = map.stream().min(Comparator.naturalOrder()).orElse(BigDecimal.ZERO);
         // Máximo
         var max = map.stream().max(Comparator.naturalOrder()).orElse(BigDecimal.ZERO);
+        log.info("Insights Gerados!");
         return new EstatiscaDto(count,sum,avg,min,max);
     }
 }

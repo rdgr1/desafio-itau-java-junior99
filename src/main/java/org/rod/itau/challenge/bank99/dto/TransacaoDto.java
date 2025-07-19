@@ -13,7 +13,6 @@ public record TransacaoDto(
         @NotNull(message = "Valor é obrigatório.")
         @DecimalMin(value = "0.00", inclusive = true, message = "Valor não pode ser negativo.")
         BigDecimal valor,
-        @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
         @NotNull(message = "Data e hora são obrigatórios.")
         @PastOrPresent(message = "Data e hora não podem estar no futuro.")
         LocalDateTime dataHora
